@@ -1,0 +1,84 @@
+name: H5P Content Generation
+
+on:
+  workflow_dispatch:
+    inputs:
+      lesson_id:
+        description: 'レッスンID (例: hiragana, katakana, lesson01)'
+        required: true
+      content_type:
+        description: 'コンテンツタイプ (例: dialog_cards, course_presentation)'
+        required: true
+        default: 'dialog_cards'
+      task_file:
+        description: 'タスク指示ファイルのパス'
+        required: true
+        default: 'tasks/1_hiragana-lesson.md'
+
+jobs:
+  generate-content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install openai requests python-dotenv h5p-cli
+
+      - name: Setup environment
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MOODLE_URL: ${{ secrets.MOODLE_URL }}
+          MOODLE_TOKEN: ${{ secrets.MOODLE_TOKEN }}
+        run: |
+          echo "OPENAI_API_KEY=$OPENAI_API_KEY" >> .env
+          echo "MOODLE_URL=$MOODLE_URL" >> .env
+          echo "MOODLE_TOKEN=$MOODLE_TOKEN" >> .env
+
+      - name: Generate content with GPT-4o
+        run: |
+          python scripts/generate_content.py \
+            --lesson_id ${{ github.event.inputs.lesson_id }} \
+            --content_type ${{ github.event.inputs.content_type }} \
+            --task_file ${{ github.event.inputs.task_file }} \
+            --output_dir src/content/${{ github.event.inputs.lesson_id }}
+
+      - name: Convert to H5P package
+        run: |
+          python scripts/json_to_h5p.py \
+            --input_dir src/content/${{ github.event.inputs.lesson_id }} \
+            --output_dir h5p/${{ github.event.inputs.lesson_id }}
+
+      - name: Upload to Moodle
+        run: |
+          python scripts/upload_to_moodle.py \
+            --h5p_dir h5p/${{ github.event.inputs.lesson_id }}
+
+      - name: Archive H5P artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: h5p-packages
+          path: h5p/${{ github.event.inputs.lesson_id }}
+
+      - name: Create PR with generated content
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "Add generated content for ${{ github.event.inputs.lesson_id }}"
+          title: "Content: ${{ github.event.inputs.lesson_id }} (${{ github.event.inputs.content_type }})"
+          body: |
+            自動生成されたH5Pコンテンツ (${{ github.event.inputs.lesson_id }})
+            
+            - レッスンID: ${{ github.event.inputs.lesson_id }}
+            - コンテンツタイプ: ${{ github.event.inputs.content_type }}
+            - タスクファイル: ${{ github.event.inputs.task_file }}
+            
+            レビューをお願いします。
+          branch: content/${{ github.event.inputs.lesson_id }}
+          delete-branch: true
