@@ -9,6 +9,7 @@
 1. コンテンツタイプ: Dialog Cards & Course Presentation
 2. 対象: インドネシア語を母語とする初心者
 3. N5レベル: 基礎的な文字学習
+4. 漢字には必ずカッコ書きでルビをふる。難しい漢字は使わない。
 
 ## データ構造
 
@@ -16,12 +17,13 @@
 
 ```json
 {
-  "title": "ひらがな学習 - 基本セット",
+  "title": "ひらがな学習 - 基本（きほん）セット",
+　"description":"ひらがなを覚（おぼ）えましょう",
   "cards": [
     {
       "text": "あ",
-      "answer": "a - アルファベットの「a」に似た発音",
-      "tip": "「a」のように発音します",
+      "answer": "a - アルファベットの「a」に似（に）た発音（はつおん）",
+      "tip": "「a」のように発音（はつおん）します",
       "image": {
         "path": "images/hiragana_a.jpg",
         "width": 300,
@@ -44,32 +46,30 @@
 
 ### Course Presentation JSON構造
 
-```json
 {
-  "title": "ひらがな - 筆順と練習",
-  "slides": [
-    {
-      "elements": [
-        {
-          "x": 0,
-          "y": 0,
-          "width": 100,
-          "height": 100,
-          "type": "text",
-          "content": "<h2>ひらがな学習</h2><p>日本語の基本文字</p>"
-        }
-      ],
-      "keywords": ["導入", "はじめに"]
-    },
-    // 他のスライドも同様の形式で...
-  ],
-  "display": {
-    "showTitleScreen": true,
-    "showProgressBar": true,
-    "showTableOfContents": true
-  }
+"title": "ひらがな - 練習",
+"slides": [
+{
+"elements": [
+{
+"x": 0,
+"y": 0,
+"width": 100,
+"height": 100,
+"type": "text",
+"content": "<h2>ひらがな学習</h2><p>日本語の基本文字</p>"
 }
-```
+],
+"keywords": ["導入", "はじめに"]
+},
+// 他のスライドも同様の形式で...
+],
+"display": {
+"showTitleScreen": true,
+"showProgressBar": true,
+"showTableOfContents": true
+}
+}
 
 ## コンテンツ要件
 

@@ -64,6 +64,7 @@
 ```json
 {
   "title": "ひらがな・カタカナ混合音読練習",
+　"description":"ひらがなを覚（おぼ）えましょう",
   "slides": [
     {
       "elements": [

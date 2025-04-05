@@ -8,8 +8,11 @@ n5-japanese-course/
 ├── README.md                      # プロジェクト概要
 │
 ├── .github/                       # GitHub設定
-│   └── workflows/                 # GitHubワークフロー
-│       └── content-generation.yml # コンテンツ自動生成ワークフロー
+│   ├── workflows/                 # GitHubワークフロー
+│   │    └── content-generation.yml # コンテンツ自動生成ワークフロー
+│   └── ISSUE_TEMPLATE/            # Issueテンプレート
+│       ├── content-development.md # コンテンツ開発テンプレート
+│       └── bug-report.md          # バグ報告テンプレート
 │
 ├── tasks/                         # 自動化タスク指示書
 │   ├── hiragana-lesson.md         # ひらがな学習タスク
@@ -29,10 +32,6 @@ n5-japanese-course/
 │       ├── h5p-template-guide.md  # H5P作成ガイド
 │       └── content-checklist.md   # コンテンツチェックリスト
 │
-├── .github/                       # GitHub設定
-│   └── ISSUE_TEMPLATE/            # Issueテンプレート
-│       ├── content-development.md # コンテンツ開発テンプレート
-│       └── bug-report.md          # バグ報告テンプレート
 │
 ├── src/                           # ソースファイル
 │   ├── templates/                 # テンプレートファイル
