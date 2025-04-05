@@ -834,7 +834,7 @@ def call_gpt4o(prompt: str) -> str:
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.7,
-                max_tokens=4000
+                max_tokens=10000
             )
             return response.choices[0].message.content
         except Exception as e:

@@ -17,6 +17,8 @@ import glob
 import uuid
 import subprocess
 import cairosvg
+from datetime import datetime
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -151,7 +153,19 @@ def create_h5p_package(json_file, content_type, templates_dir, output_dir):
     with open(json_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     title = data.get('title', Path(json_file).stem)
-    output_file = os.path.join(output_dir, Path(json_file).stem + '.h5p')
+    title = data.get('title', Path(json_file).stem)
+    base_filename = f"N5_{data.get('title', Path(json_file).stem)}.h5p"
+
+    # 既存ファイルがあればリネーム（日時付き）
+    output_file = os.path.join(output_dir, base_filename)
+    if os.path.exists(output_file):
+        created_time = datetime.fromtimestamp(os.path.getctime(output_file)).strftime("%Y%m%d_%H%M%S")
+        backup_name = f"{base_filename.replace('.h5p', '')}_{created_time}.h5p"
+        backup_path = os.path.join(output_dir, backup_name)
+        os.rename(output_file, backup_path)
+        logger.info(f"既存ファイルをリネーム: {output_file} → {backup_path}")
+
+
     with tempfile.TemporaryDirectory() as tmp:
         with zipfile.ZipFile(template, 'r') as zip_ref:
             zip_ref.extractall(tmp)
