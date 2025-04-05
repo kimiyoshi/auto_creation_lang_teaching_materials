@@ -62,10 +62,11 @@ jobs:
             --h5p_dir h5p/${{ github.event.inputs.lesson_id }}
 
       - name: Archive H5P artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: h5p-packages
           path: h5p/${{ github.event.inputs.lesson_id }}
+
 
       - name: Create PR with generated content
         uses: peter-evans/create-pull-request@v5
